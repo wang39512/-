@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="cred" class="com.qcloud.cos.auth.BasicCOSCredentials">
+        <constructor-arg index="0" value="AKIDKQIxokXvBLGx1qjv990e7OPEn9IHlWyB"/>
+        <constructor-arg index="1" value="B9UbaJRXTDk361g5IGVWVJvHJ7l9xZwl"/>
+    </bean>
+
+    <bean id="region" class="com.qcloud.cos.region.Region">
+        <constructor-arg index="0" value="ap-beijing"/>
+    </bean>
+
+    <bean id="clientConfig" class="com.qcloud.cos.ClientConfig">
+        <constructor-arg index="0" ref="region"/>
+    </bean>
+
+    <bean class="com.qcloud.cos.COSClient">
+        <constructor-arg index="0" ref="cred"/>
+        <constructor-arg index="1" ref="clientConfig"/>
+    </bean>
+
+</beans>

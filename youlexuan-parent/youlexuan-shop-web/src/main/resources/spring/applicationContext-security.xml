@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--配置拦截-->
+   <security:http pattern="/favicon.ico" security="none"/>
+   <security:http pattern="/shoplogin.html" security="none"/>
+   <security:http pattern="/register.html" security="none"/>
+   <security:http pattern="/css/**" security="none"/>
+   <security:http pattern="/img/**" security="none"/>
+   <security:http pattern="/plugins/**" security="none"/>
+    <security:http pattern="/user/register.do" security="none"/>
+    <security:http pattern="/controller/**" security="none"/>
+    <security:http pattern="/service/**" security="none"/>
+    <security:http pattern="/base/**" security="none"/>
+
+    <!--拦截规则的配置  use-expressions 是否使用sepl表达式，默认是true
+    如果改为false  需要添加<security:intercept-url pattern="/**" access="ROLE_USER"></security:intercept-url>-->
+    <security:http use-expressions="false">
+            <security:intercept-url pattern="/**" access="ROLE_SELLER"/>
+        <!--登录 如果不指令跳转的页面，就会用默认的   页面前面必须要加上 /  -->
+        <!--如果用自定义的页面不用系统自带的页面，需要在自定义页面中加上 action="/login"   method="post"  账号：username  密码：passoword-->
+        <security:form-login login-page="/shoplogin.html"  authentication-failure-url="/shoplogin.html" default-target-url="/admin/index.html" always-use-default-target="true"/>
+        <!--注销-->
+        <security:logout/>
+        <!--Could not verify the provided CSRF token because your session was not found.-->
+        <security:csrf disabled="true"/>
+        <!--in a frame because it set 'X-Frame-Options' to 'deny'.-->
+        <security:headers>
+            <!--如果系统中使用了框架，需要指定框架页的策略为SAMEORIGIN-->
+            <security:frame-options policy="SAMEORIGIN"/>
+        </security:headers>
+    </security:http>
+
+    <!--接收服务-->
+    <dubbo:application name="book-controller"/>
+    <!--知道到注册中心-->
+    <dubbo:registry protocol="zookeeper" address="ujiuye.club:2181"/>
+    <!--从注册中心获取服务-->
+    <dubbo:reference interface="com.offcn.service.SellerService" id="sellerService"/>
+        <!--UserdetailServic userdetialService = new UserDetailServieImpl()-->
+    <bean id="userDetailsService" class="com.offcn.authentication.UserDetailServiceImpl">
+        <property name="sellerService" ref="sellerService"/>
+    </bean>
+    <!--数据库查询密码是密文，在页面输入的是明文-->
+    <bean id="md5PasswordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
+    <!--认证管理-->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="userDetailsService">
+            <security:password-encoder ref="md5PasswordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <!--在springsecurity中默认的登录url是/login  登出是/logout-->
+</beans>
