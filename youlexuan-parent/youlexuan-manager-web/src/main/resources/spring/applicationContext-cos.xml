@@ -4,8 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="cred" class="com.qcloud.cos.auth.BasicCOSCredentials">
-        <constructor-arg index="0" value="AKIDKQIxokXvBLGx1qjv990e7OPEn9IHlWyB"/>
-        <constructor-arg index="1" value="B9UbaJRXTDk361g5IGVWVJvHJ7l9xZwl"/>
+        <constructor-arg index="0" value="xx"/>
+        <constructor-arg index="1" value="xx"/>
     </bean>
 
     <bean id="region" class="com.qcloud.cos.region.Region">
