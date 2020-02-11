@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class UploadUtils {
-    private static String bucketName = "wangwei-1259207560";
+    private static String bucketName = "xx";
 
-    private static String domainName = "https://wangwei-1259207560.cos.ap-beijing.myqcloud.com/";
+    private static String domainName = "xx";
 
     public static String upload(COSClient cosClient, String dir, MultipartFile file){
         String fileName = UUID.randomUUID() + file.getOriginalFilename();
